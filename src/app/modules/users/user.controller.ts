@@ -1,7 +1,5 @@
-import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import { userService } from "./user.service";
-import { UserModel } from "./user.model";
 import sendResponse from "../../../utils/sendResponse";
 
 const createUser = async (req: Request, res: Response) => {
@@ -9,7 +7,8 @@ const createUser = async (req: Request, res: Response) => {
     const user = req.body;
 
     const result = await userService.createUserToDB(user);
-    res.status(201).json({
+    sendResponse(res, {
+      statusCode: 200,
       success: true,
       message: "User created successfully",
       data: result,
