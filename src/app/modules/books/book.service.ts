@@ -13,10 +13,18 @@ const getSingleBookFromDB = async (id: string) => {
 const deleteSingleBookFromDB = async (id: string) => {
   return await BookModel.findOneAndDelete({ _id: id });
 };
+const updateSingleBookFromDB = async (id: string, updatedBook: IBook) => {
+  return await BookModel.findByIdAndUpdate(
+    { _id: id },
+    { $set: updatedBook },
+    { new: true }
+  );
+};
 
 export const bookService = {
   createBookToDB,
   getAllBookFromDB,
   getSingleBookFromDB,
   deleteSingleBookFromDB,
+  updateSingleBookFromDB,
 };

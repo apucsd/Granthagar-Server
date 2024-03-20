@@ -55,10 +55,23 @@ const deleteSingleBook = async (req: Request, res: Response) => {
     data: result,
   });
 };
+const updateSingleBook = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const updatedBook = req.body;
+  const result = await bookService.updateSingleBookFromDB(id, updatedBook);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Single Book update successfully",
+    data: result,
+  });
+};
 
 export const bookController = {
   createBook,
   getAllBook,
   getSingleBook,
   deleteSingleBook,
+  updateSingleBook,
 };
