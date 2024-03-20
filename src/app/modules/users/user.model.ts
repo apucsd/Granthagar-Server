@@ -3,16 +3,42 @@ import { IUser } from "./user.interface";
 import bcrypt from "bcrypt";
 import config from "../../config";
 
-const userSchema = new Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  role: {
-    type: String,
-    enum: ["admin", "seller", "guest"],
-    default: "guest",
+const userSchema = new Schema(
+  {
+    name: { type: String, required: [true, "Name is required"] },
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      unique: true,
+    },
+    password: { type: String, required: [true, "Password is required"] },
+    role: {
+      type: String,
+      enum: { values: ["admin", "seller", "guest"], message: "Invalid role" },
+      default: "guest",
+    },
+    firstName: { type: String },
+    lastName: { type: String },
+    dateOfBirth: { type: Date },
+    gender: {
+      type: String,
+      enum: ["male", "female", "other"],
+      default: "other",
+    },
+    address: {
+      street: { type: String },
+      city: { type: String },
+      state: { type: String },
+      country: { type: String },
+      zipCode: { type: String },
+    },
+    phoneNumber: { type: String },
+    image: { type: String },
   },
-});
+  {
+    timestamps: true,
+  }
+);
 
 userSchema.pre("save", async function (next) {
   try {

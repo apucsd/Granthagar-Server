@@ -24,10 +24,17 @@ const findUserFromDB = async (user: IUser) => {
 const getAllUserToDB = async () => {
   return await UserModel.find();
 };
-
+const updateUserFromDB = async (id: string, user: IUser) => {
+  return await UserModel.findByIdAndUpdate(
+    { _id: id },
+    { $set: user },
+    { new: true }
+  );
+};
 export const userService = {
   createUserToDB,
   findUserFromDB,
 
   getAllUserToDB,
+  updateUserFromDB,
 };

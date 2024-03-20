@@ -55,9 +55,21 @@ const findUser = async (req: Request, res: Response) => {
     });
   }
 };
+const updateUser = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const updatedBook = req.body;
+  const result = await userService.updateUserFromDB(id, updatedBook);
 
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Single User updated successfully",
+    data: result,
+  });
+};
 export const userController = {
   createUser,
   getUser,
   findUser,
+  updateUser,
 };
