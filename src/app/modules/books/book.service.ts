@@ -10,10 +10,13 @@ const getAllBookFromDB = async () => {
 const getSingleBookFromDB = async (id: string) => {
   return await BookModel.findOne({ _id: id });
 };
+const deleteSingleBookFromDB = async (id: string) => {
+  return await BookModel.findOneAndDelete({ _id: id });
+};
 
 export const bookService = {
   createBookToDB,
-
   getAllBookFromDB,
   getSingleBookFromDB,
+  deleteSingleBookFromDB,
 };

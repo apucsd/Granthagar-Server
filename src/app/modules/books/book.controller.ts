@@ -44,9 +44,21 @@ const getSingleBook = async (req: Request, res: Response) => {
     data: result,
   });
 };
+const deleteSingleBook = async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await bookService.deleteSingleBookFromDB(id);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Single Book deleted successfully",
+    data: result,
+  });
+};
 
 export const bookController = {
   createBook,
   getAllBook,
   getSingleBook,
+  deleteSingleBook,
 };
