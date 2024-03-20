@@ -31,10 +31,13 @@ const updateUserFromDB = async (id: string, user: IUser) => {
     { new: true }
   );
 };
+const deleteSingleUserFromDB = async (id: string) => {
+  return await UserModel.findOneAndDelete({ _id: id });
+};
 export const userService = {
   createUserToDB,
   findUserFromDB,
-
   getAllUserToDB,
   updateUserFromDB,
+  deleteSingleUserFromDB,
 };
