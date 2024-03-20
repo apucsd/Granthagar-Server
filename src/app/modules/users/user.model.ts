@@ -26,5 +26,11 @@ userSchema.pre("save", async function (next) {
     next(error as Error); // Explicitly specify the type of error
   }
 });
+// Remove password field from user object before sending to frontend
+userSchema.methods.toJSON = function () {
+  const user = this.toObject();
+  delete user.password;
+  return user;
+};
 
 export const UserModel = model<IUser>("User", userSchema);

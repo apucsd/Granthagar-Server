@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { userService } from "./user.service";
 import sendResponse from "../../../utils/sendResponse";
-
+import jwt from "jsonwebtoken";
+import config from "../../config";
 const createUser = async (req: Request, res: Response) => {
   try {
     const user = req.body;
@@ -34,11 +35,17 @@ const findUser = async (req: Request, res: Response) => {
   try {
     const user = req.body;
     const result = await userService.findUserFromDB(user);
+    const token = jwt.sign({ email: user.email }, config.jwt_secret as string, {
+      expiresIn: config.expires_in,
+    });
     sendResponse(res, {
       statusCode: 200,
       success: true,
       message: "User successfully Retrieved",
-      data: result,
+      data: {
+        token,
+        result,
+      },
     });
   } catch (error: any) {
     sendResponse(res, {
