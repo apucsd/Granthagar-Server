@@ -4,8 +4,8 @@ import { BookModel } from "./book.model";
 const createBookToDB = async (book: IBook) => {
   return await BookModel.create(book);
 };
-const getAllBookFromDB = async () => {
-  return await BookModel.find();
+const getAllBookFromDB = async (query = {}) => {
+  return await BookModel.find(query);
 };
 const getSingleBookFromDB = async (id: string) => {
   return await BookModel.findOne({ _id: id });

@@ -23,16 +23,46 @@ const createBook = async (req: Request, res: Response) => {
     });
   }
 };
-const getAllBook = async (req: Request, res: Response) => {
-  const result = await bookService.getAllBookFromDB();
 
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "All Book fetched successfully",
-    data: result,
-  });
+const getAllBook = async (req: Request, res: Response) => {
+  try {
+    const queryParam = req.query;
+    let result;
+
+    if (Object.keys(queryParam).length === 0) {
+      // If no query parameters, fetch all books
+      result = await bookService.getAllBookFromDB();
+    } else {
+      // If query parameters are provided, construct a query based on them
+      const query: { [key: string]: any } = {}; // Explicitly define query as an object that may contain any keys
+      for (const key in queryParam) {
+        if (key === "category") {
+          // If filtering by category, use $in operator for an array of categories
+          query[key] = { $in: queryParam[key] };
+        } else {
+          // For other fields, simply set the query
+          query[key] = queryParam[key];
+        }
+      }
+      result = await bookService.getAllBookFromDB(query);
+    }
+
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "Books fetched successfully",
+      data: result,
+    });
+  } catch (error: any) {
+    sendResponse(res, {
+      statusCode: 500,
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
 };
+
 const getSingleBook = async (req: Request, res: Response) => {
   const id = req.params.id;
   const result = await bookService.getSingleBookFromDB(id);
