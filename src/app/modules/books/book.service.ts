@@ -22,9 +22,9 @@ const createBookToDB = async (book: IBook) => {
 ////////////////////////////////
 ////////////////////////////////
 const getAllBookFromDB = async (query: Record<string, unknown>) => {
-  console.log(query);
+  // console.log(query);
   const queryObject = { ...query };
-  let excludeQueryFields = ["searchTerm", "page", "sort"].forEach(
+  let excludeQueryFields = ["searchTerm", "page", "sort", "limit"].forEach(
     (element) => delete queryObject[element]
   );
 
@@ -43,27 +43,30 @@ const getAllBookFromDB = async (query: Record<string, unknown>) => {
   });
   const filterQuery = searchQuery.find(queryObject);
 
+  ///////SORTING DATA sort=-createdAt
   let sort = "-createdAt";
   if (query.sort) {
     sort = query.sort as string;
   }
-  const sortQuery = await filterQuery.sort(sort);
-  return sortQuery;
+  const sortQuery = filterQuery.sort(sort);
+
+  ////limit query data
+  let limit = 1;
+  if (query.limit) {
+    limit = Number(query.limit);
+  }
+
+  let page = 1;
+  let skip = 0;
+  if (query.page) {
+    page = Number(query.page);
+    skip = (page - 1) * limit;
+  }
+  const paginatedQuery = sortQuery.skip(skip);
+  const limitQuery = await paginatedQuery.limit(limit);
+  return limitQuery;
 };
 
-////////////////////////////////
-////////////////////////////////
-////////////////////////////////
-////////////////////////////////
-////////////////////////////////
-////////////////////////////////
-////////////////////////////////
-////////////////////////////////
-////////////////////////////////
-////////////////////////////////
-////////////////////////////////
-////////////////////////////////
-////////////////////////////////
 ////////////////////////////////
 ////////////////////////////////
 ////////////////////////////////
