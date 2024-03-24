@@ -23,21 +23,32 @@ const createBookToDB = async (book: IBook) => {
 ////////////////////////////////
 const getAllBookFromDB = async (query: Record<string, unknown>) => {
   console.log(query);
-  // HOW OUR FORMAT SHOULD BE FOR PARTIAL MATCH  :
-  //  { email: { $regex : query.searchTerm , $options: i}}
+  const queryObject = { ...query };
+  let excludeQueryFields = ["searchTerm", "page", "sort"].forEach(
+    (element) => delete queryObject[element]
+  );
 
   let searchTerm = ""; // this is for partial search
   if (query?.searchTerm) {
     searchTerm = query?.searchTerm as string;
   }
+
+  // PARTIAL SEARCH TERM STRUCTURE
   const searchQuery = BookModel.find({
     $or: ["title", "language", "authors", "category"].map((field) => ({
       [field]: { $regex: searchTerm, $options: "i" },
+      //  HOW WILL IT LOOKS LIKE
+      //   { email: { $regex : query.searchTerm , $options: "i"}}
     })),
   });
-  const result = await searchQuery.find();
+  const filterQuery = searchQuery.find(queryObject);
 
-  return result;
+  let sort = "-createdAt";
+  if (query.sort) {
+    sort = query.sort as string;
+  }
+  const sortQuery = await filterQuery.sort(sort);
+  return sortQuery;
 };
 
 ////////////////////////////////

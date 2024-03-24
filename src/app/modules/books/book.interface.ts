@@ -11,4 +11,6 @@ export interface IBook {
   price: number; // Price of the book
   quantity: number; // Quantity available
   weight?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
