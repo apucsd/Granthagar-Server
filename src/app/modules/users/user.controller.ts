@@ -41,30 +41,30 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const findUser = async (req: Request, res: Response) => {
-  try {
-    const user = req.body;
-    const result = await userService.findUserFromDB(user);
-    const token = jwt.sign({ email: user.email }, config.jwt_secret as string, {
-      expiresIn: config.expires_in,
-    });
-    sendResponse(res, {
-      statusCode: 200,
-      success: true,
-      message: "User successfully Retrieved",
-      data: {
-        token,
-        result,
-      },
-    });
-  } catch (error: any) {
-    sendResponse(res, {
-      statusCode: 500,
-      success: false,
-      error: error.message || "Something went wrong",
-    });
-  }
-};
+// const findUser = async (req: Request, res: Response) => {
+//   try {
+//     const user = req.body;
+//     const result = await userService.findUserFromDB(user);
+//     const token = jwt.sign({ email: user.email }, config.jwt_secret as string, {
+//       expiresIn: config.expires_in,
+//     });
+//     sendResponse(res, {
+//       statusCode: 200,
+//       success: true,
+//       message: "User successfully Retrieved",
+//       data: {
+//         token,
+//         result,
+//       },
+//     });
+//   } catch (error: any) {
+//     sendResponse(res, {
+//       statusCode: 500,
+//       success: false,
+//       error: error.message || "Something went wrong",
+//     });
+//   }
+// };
 const updateUser = async (req: Request, res: Response) => {
   const id = req.params.id;
   const updatedBook = req.body;
@@ -91,7 +91,7 @@ const deleteSingleUser = async (req: Request, res: Response) => {
 export const userController = {
   createUser,
   getUser,
-  findUser,
+  // findUser,
   updateUser,
   deleteSingleUser,
 };

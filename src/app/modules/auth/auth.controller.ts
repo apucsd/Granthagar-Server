@@ -1,20 +1,11 @@
-import jwt from "jsonwebtoken";
 import { authService } from "./auth.service";
-import config from "../../config";
 import sendResponse from "../../../utils/sendResponse";
 import { Request, Response } from "express";
 
 const loginUser = async (req: Request, res: Response) => {
   try {
     const user = req.body;
-    const result = await authService.loginUser(user);
-    const accessToken = jwt.sign(
-      { email: user.email },
-      config.jwt_secret as string,
-      {
-        expiresIn: config.expires_in,
-      }
-    );
+    const { accessToken } = await authService.loginUser(user);
 
     sendResponse(res, {
       statusCode: 200,
@@ -22,7 +13,6 @@ const loginUser = async (req: Request, res: Response) => {
       message: "User logged in successful",
       data: {
         accessToken,
-        result,
       },
     });
   } catch (error: any) {

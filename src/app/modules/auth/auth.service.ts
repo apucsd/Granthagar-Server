@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { UserModel } from "../users/user.model";
+import config from "../../config";
 const loginUser = async (payload: any) => {
   // checking if the user is exist
 
@@ -15,17 +17,14 @@ const loginUser = async (payload: any) => {
   if (!isPasswordValid) {
     throw new Error("Invalid password");
   }
-
   const jwtPayload = {
     userEmail: foundUser.email,
     role: foundUser.role,
   };
-
-  // const accessToken = createToken(
-  //   jwtPayload,
-  //   config.jwt_access_secret as string,
-  //   config.jwt_access_expires_in as string,
-  // );
+  // console.log(jwtPayload, "this is from auth service ");
+  const accessToken = jwt.sign(jwtPayload, config.jwt_secret as string, {
+    expiresIn: config.expires_in,
+  });
 
   // const refreshToken = createToken(
   //   jwtPayload,
@@ -34,7 +33,7 @@ const loginUser = async (payload: any) => {
   // );
 
   return {
-    jwtPayload,
+    accessToken,
   };
 };
 export const authService = {

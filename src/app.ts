@@ -9,7 +9,7 @@ const app: Application = express();
 
 app.use(express.json());
 app.use(cors());
-app.use("/api/v1", authRoutes);
+app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1", userRouter);
 app.use("/api/v1", bookRouter);
 app.get("/", (req: Request, res: Response) => {

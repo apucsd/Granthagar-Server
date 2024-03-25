@@ -1,15 +1,29 @@
 import { NextFunction, Request, Response } from "express";
-
+import jwt from "jsonwebtoken";
+import config from "../config";
+// Extend the Request interface to include the 'user' property
+declare global {
+  namespace Express {
+    interface Request {
+      user?: any;
+    }
+  }
+}
 export const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.headers.authorization;
-    console.log(token);
 
     if (!token) {
       throw new Error("Unauthorized access");
     }
+    jwt.verify(token, config.jwt_secret as string, (err, decoded) => {
+      if (err) {
+        throw new Error("You are unauthorized");
+      }
 
-    next();
+      req.user = decoded;
+      next();
+    });
   } catch (error) {
     next(error);
   }
