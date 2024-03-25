@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { userService } from "./user.service";
 import sendResponse from "../../../utils/sendResponse";
 import jwt from "jsonwebtoken";
@@ -22,15 +22,25 @@ const createUser = async (req: Request, res: Response) => {
     });
   }
 };
-const getUser = async (req: Request, res: Response) => {
-  const result = await userService.getAllUserToDB();
-  sendResponse(res, {
-    statusCode: 200,
-    success: true,
-    message: "User successfully fetched",
-    data: result,
-  });
+const getUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await userService.getAllUserToDB();
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "User successfully fetched",
+      data: result,
+    });
+  } catch (error: any) {
+    sendResponse(res, {
+      statusCode: 500, // Change status code to 500 for internal server error
+      success: false, // Indicate failure
+      message: error.message || "Something went wrong",
+      error: error,
+    });
+  }
 };
+
 const findUser = async (req: Request, res: Response) => {
   try {
     const user = req.body;
