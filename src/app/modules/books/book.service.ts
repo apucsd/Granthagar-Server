@@ -18,6 +18,7 @@ const getAllBookFromDB = async (query: Record<string, unknown>) => {
     searchTerm = query?.searchTerm as string;
   }
 
+  // console.log(query);
   // PARTIAL SEARCH TERM STRUCTURE
   const searchQuery = BookModel.find({
     $or: ["title", "language", "authors", "category"].map((field) => ({
@@ -26,6 +27,7 @@ const getAllBookFromDB = async (query: Record<string, unknown>) => {
       //   { email: { $regex : query.searchTerm , $options: "i"}}
     })),
   });
+
   const filterQuery = searchQuery.find(queryObject);
 
   ///////SORTING DATA sort=-createdAt
@@ -36,7 +38,7 @@ const getAllBookFromDB = async (query: Record<string, unknown>) => {
   const sortQuery = filterQuery.sort(sort);
 
   ////limit query data
-  let limit = 1;
+  let limit = 20;
   if (query.limit) {
     limit = Number(query.limit);
   }
@@ -48,8 +50,10 @@ const getAllBookFromDB = async (query: Record<string, unknown>) => {
     skip = (page - 1) * limit;
   }
   const paginatedQuery = sortQuery.skip(skip);
+  const total = await BookModel.countDocuments();
+  const totalPage = Math.ceil(total / limit);
   const limitQuery = await paginatedQuery.limit(limit);
-  return limitQuery;
+  return { limitQuery, total, totalPage };
 };
 
 ////////////////////////////////

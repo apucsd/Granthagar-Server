@@ -8,6 +8,7 @@ const bookSchema = new Schema<IBook>(
     isbn: { type: String, required: true },
     publisher: { type: String },
     publicationYear: { type: Number },
+    ratings: { type: Number },
     category: { type: [String] },
     image: { type: String },
     language: { type: String, required: true },

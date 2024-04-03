@@ -4,6 +4,7 @@ export interface IBook {
   isbn: string; // Optional ISBN number
   publisher: string; // Optional publisher name
   publicationYear?: number; // Optional publication year
+  ratings?: number; // Optional publication year
   category?: string[]; // Array of genres the book belongs to
   image?: string;
   language: string; // Language of the book

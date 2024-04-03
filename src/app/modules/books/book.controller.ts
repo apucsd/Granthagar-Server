@@ -27,13 +27,19 @@ const createBook = async (req: Request, res: Response) => {
 const getAllBook = async (req: Request, res: Response) => {
   const query = req.query;
 
-  const result = await bookService.getAllBookFromDB(query);
-
+  const { limitQuery, total, totalPage } = await bookService.getAllBookFromDB(
+    query
+  );
+  console.log({ total, totalPage });
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: "Books fetched successfully",
-    data: result,
+    data: limitQuery,
+    meta: {
+      total: total,
+      totalPage: totalPage,
+    },
   });
 };
 
