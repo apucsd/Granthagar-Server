@@ -23,9 +23,9 @@ const createUserToDB = async (user: IUser) => {
 const getAllUserToDB = async () => {
   return await UserModel.find();
 };
-const updateUserFromDB = async (id: string, user: IUser) => {
-  return await UserModel.findByIdAndUpdate(
-    { _id: id },
+const updateUserFromDB = async (email: string, user: IUser) => {
+  return await UserModel.findOneAndUpdate(
+    { email: email },
     { $set: user },
     { new: true }
   );

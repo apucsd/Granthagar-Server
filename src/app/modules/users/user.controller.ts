@@ -66,9 +66,9 @@ const getUser = async (req: Request, res: Response, next: NextFunction) => {
 //   }
 // };
 const updateUser = async (req: Request, res: Response) => {
-  const id = req.params.id;
-  const updatedBook = req.body;
-  const result = await userService.updateUserFromDB(id, updatedBook);
+  const { email } = req.params;
+  const updateUser = req.body;
+  const result = await userService.updateUserFromDB(email, updateUser);
 
   sendResponse(res, {
     statusCode: 200,
